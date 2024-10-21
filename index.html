@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>   
+<head>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
 
@@ -10,7 +10,7 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             height: 100vh;
             width: 100%;
@@ -18,19 +18,19 @@
             justify-content: center;
             align-items: center;
             font-family: sans-serif;
-            background-color: #3B4049;
+            background-color: #403030;
         }
-        
+
         .wrapper {
             height: 200px;
             width: 300px;
-            background-color: #3760C9;
+            background-color: #c93737;
             position: relative;
             display: flex;
             justify-content: center;
             z-index: 0;
         }
-        
+
         .lid {
             position: absolute;
             height: 100%;
@@ -43,23 +43,23 @@
             transform-origin: top;
             transition: transform 0.25s linear;
         }
-        
+
         /* Lid when closed */
         .lid.one {
-            border-top: 100px solid #658ced;
+            border-top: 100px solid #ed6565;
             transform: rotateX(0deg);
             z-index: 3;
             transition-delay: 0.75s;
         }
-        
+
         /* Lid when opened */
         .lid.two {
-            border-top: 100px solid #3760C9;
+            border-top: 100px solid #c93737;
             transform: rotateX(90deg);
             z-index: 1;
             transition-delay: 0.5s;
         }
-        
+
         .envelope {
             position: absolute;
             height: 100%;
@@ -67,13 +67,14 @@
             top: 0;
             left: 0;
             border-top: 100px solid transparent;
-            border-right: 150px solid #C4DFF0;
-            border-bottom: 100px solid #C4DFF0;
-            border-left: 150px solid #a4d4f2;
+            border-right: 150px solid #f0c4c4;
+            border-bottom: 100px solid #f0c4c4;
+            border-left: 150px solid #f2a4a4;
             z-index: 3;
         }
-        
+
         .letter {
+
             position: absolute;
             top: 0;
             width: 80%;
@@ -83,7 +84,7 @@
             z-index: 2;
             transition: 0.5s;
         }
-        
+
         .letter p {
             font-family: "Itim", cursive;
             text-align: center;
@@ -92,40 +93,68 @@
             color: #3B4049;
         }
 
-    </style>  
+        .wrapper.clicked .lid.one {            
+            transform: rotateX(90deg);
+            transition-delay: 0s;
+        }
+
+        .wrapper.clicked .lid.two {
+            transform: rotateX(180deg);
+            transition-delay: 0.25s;
+        }
+
+        .wrapper.clicked .letter {
+            transform: translateY(-50px);
+            transition-delay: 0.5s;
+        }
+    </style>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Interactive Letter</title>
 </head>
 
 <body>
-    <div class="wrapper" id="envelope">
-      <div class="lid one" id="lid1"></div>
-      <div class="lid two" id="lid2"></div>
-      <div class="envelope"></div>
-      <div class="letter" id="letter">
-        <p>เค้าาขอท่ดนะค้าบเทออ <br> เค้าผิดไปแล้วจีงๆ ;-; <br> <span style="color: #E3A5C7;">กดข้อความเพื่อไปต่อ</span></p>
-      </div>
+    <div class="wrapper" id="wrapper">
+        <div class="lid one"></div>
+        <div class="lid two"></div>
+        <div class="envelope"></div>
+        <div class="letter" id="letter">
+            <p id="message">เค้าาขอท่ดนะค้าบเทออ <br> เค้าผิดไปแล้วจีงๆ ;-; <br> <span style="color: #E3A5C7;">กดเพื่อไปต่อ</span></p>
+        </div>
     </div>
 
     <script>
-      const envelope = document.getElementById("envelope");
-      const lid1 = document.getElementById("lid1");
-      const lid2 = document.getElementById("lid2");
-      const letter = document.getElementById("letter");
+        const wrapper = document.getElementById('wrapper');
+        const message = document.getElementById('message');
+        let isOpened = false;
 
-      envelope.addEventListener("click", function() {
-          // เปิดฝาซองจดหมาย
-          lid1.style.transform = "rotateX(90deg)";
-          lid1.style.transitionDelay = "0s";
-          lid2.style.transform = "rotateX(180deg)";
-          lid2.style.transitionDelay = "0.25s";
-          
-          // จดหมายเลื่อนขึ้น
-          letter.style.transform = "translateY(-50px)";
-          letter.style.transitionDelay = "0.5s";
-      });
+        // Function for typewriter effect
+        function typeWriter(text, i, callback) {
+            if (i < text.length) {
+                message.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(function () {
+                    typeWriter(text, i, callback);
+                }, 60);  // Speed of typing (100ms per character)
+            } else if (callback) {
+                callback();
+            }
+        }
+
+        // เปิดฝาซองจดหมายเมื่อคลิก
+        wrapper.addEventListener('click', function () {
+            if (!isOpened) {
+                wrapper.classList.add('clicked');
+                isOpened = true; // จดหมายเปิดแล้ว
+            } else {
+                // ลบข้อความเก่าและเริ่มเอฟเฟกต์ typewriter
+                message.innerHTML = "";
+                const newText = "เค้าจะปรับเวลาและแบ่งเวลาให้เหมาะสมขึ้นนะค้าบบ <3";
+                typeWriter(newText, 0);
+            }
+        });
     </script>
 </body>
 
